@@ -1,0 +1,44 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+*:active {
+  outline: none;
+}
+
+h1 {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+#scroll-list {
+  width: 100%;
+  list-style: none;
+  padding: 2rem;
+}
+
+.scroll-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  margin-bottom: 1rem;
+  background-color: lightcoral;
+  color: white;
+  font-size: 5rem;
+}
+
+.fadeIn {
+  animation: FadeIn 0.5s ease-in;
+}
+
+@keyframes FadeIn {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
