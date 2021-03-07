@@ -34,4 +34,49 @@ describe("InfiniteScroll", () => {
       expect(infiniteScroll.io).toBeInstanceOf(IntersectionObserver);
     });
   });
+
+  describe("_createObserveCallback(loadMore)", () => {
+    let infiniteScroll;
+    const args = {
+      loadMore: function () {},
+    };
+    let fakeLoadMore;
+
+    beforeEach(() => {
+      fakeLoadMore = jest.fn();
+      infiniteScroll = new InfiniteScroll(args);
+    });
+
+    it("반환값은 함수입니다.", () => {
+      const result = infiniteScroll._createObserveCallback(fakeLoadMore);
+      expect(typeof result).toBe("function");
+    });
+
+    describe("반환 함수 observeCallback(entries,observer)", () => {
+      let observeCallback;
+      const fakeObserver = {};
+
+      beforeEach(() => {
+        observeCallback = infiniteScroll
+          ._createObserveCallback(fakeLoadMore)
+          .bind(infiniteScroll);
+      });
+
+      it("마지막 아이템을 가리키는 entries[0]가 감지되지 않은 상태면 loadMore를 실행하지 않습니다.", () => {
+        const entries = [{ isIntersectioning: false }];
+        observeCallback(entries, fakeObserver);
+        expect(fakeLoadMore).not.toHaveBeenCalled();
+      });
+
+      it("마지막 아이템을 가리키는 entries[0]가 감지된 상태면 loadMore를 실행해야 합니다.", () => {
+        const entries = [{ isIntersectioning: true, target: {} }];
+        observeCallback(entries, fakeObserver);
+        expect(fakeLoadMore).toHaveBeenCalled();
+        expect(fakeLoadMore).toHaveBeenCalledWith(
+          entries[0].target,
+          infiniteScroll.updateObserveTarget
+        );
+      });
+    });
+  });
 });
