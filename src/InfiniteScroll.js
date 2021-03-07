@@ -9,6 +9,16 @@ export default class InfiniteScroll {
 
     this.io = new IntersectionObserver(loadMore, options);
   }
+
+  updateObserveTarget(observer) {}
+
+  _createObserveCallback(loadMore) {
+    return function (entries, observer) {
+      if (entries[0].isIntersectioning) {
+        loadMore(entries[0].target, this.updateObserveTarget);
+      }
+    };
+  }
 }
 
 InfiniteScroll.messages = {
