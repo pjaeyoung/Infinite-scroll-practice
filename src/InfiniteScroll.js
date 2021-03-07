@@ -6,6 +6,8 @@ export default class InfiniteScroll {
     ) {
       throw new Error(InfiniteScroll.messages.incorrectArgs);
     }
+
+    this.io = new IntersectionObserver(loadMore, options);
   }
 }
 
