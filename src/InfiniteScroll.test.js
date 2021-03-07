@@ -1,6 +1,13 @@
 import InfiniteScroll from "./InfiniteScroll";
 
 describe("InfiniteScroll", () => {
+  beforeEach(() => {
+    window.IntersectionObserver = jest.fn(function (_callBack, options) {});
+  });
+
+  afterEach(() => {
+    window.IntersectionObserver.mockRestore();
+  });
   describe("constructor({loadMore,options})", () => {
     it("올바른 인자를 넘겨야 합니다.", () => {
       const incorrectArgs = [
@@ -20,6 +27,11 @@ describe("InfiniteScroll", () => {
           new InfiniteScroll(arg);
         }).toThrowError(InfiniteScroll.messages.incorrectArgs);
       });
+    });
+
+    it("IntersectionObserver 인스턴스를 생성하여 속성으로 지정해야 합니다.", () => {
+      const infiniteScroll = new InfiniteScroll({ loadMore: function () {} });
+      expect(infiniteScroll.io).toBeInstanceOf(IntersectionObserver);
     });
   });
 });
