@@ -2,7 +2,9 @@ import InfiniteScroll from "./InfiniteScroll";
 
 describe("InfiniteScroll", () => {
   beforeEach(() => {
-    window.IntersectionObserver = jest.fn(function (_callBack, options) {});
+    window.IntersectionObserver = jest.fn(function (_callBack, options) {
+      this.observe = function () {};
+    });
   });
 
   afterEach(() => {
@@ -77,6 +79,23 @@ describe("InfiniteScroll", () => {
           infiniteScroll.updateObserveTarget
         );
       });
+    });
+  });
+
+  describe("updateObserveTarget(target)", () => {
+    it("io의 observe가 마지막 아이템을 인자로 넘겨야 합니다.", () => {
+      const lastElement = {};
+      const args = {
+        loadMore: function (target, updateObserveTarget) {
+          updateObserveTarget(lastElement);
+        },
+      };
+      const infiniteScroll = new InfiniteScroll(args);
+      jest.spyOn(infiniteScroll.io, "observe").mockImplementation(() => {});
+
+      infiniteScroll.updateObserveTarget(lastElement);
+      expect(infiniteScroll.io.observe).toHaveBeenCalled();
+      expect(infiniteScroll.io.observe).toHaveBeenCalledWith(lastElement);
     });
   });
 });
