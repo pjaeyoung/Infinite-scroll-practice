@@ -8,9 +8,12 @@ export default class InfiniteScroll {
     }
 
     this.io = new IntersectionObserver(loadMore, options);
+    this.updateObserveTarget = this.updateObserveTarget.bind(this);
   }
 
-  updateObserveTarget(observer) {}
+  updateObserveTarget(target) {
+    this.io.observe(target);
+  }
 
   _createObserveCallback(loadMore) {
     return function (entries, observer) {
