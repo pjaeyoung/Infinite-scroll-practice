@@ -19,8 +19,15 @@ export default class ScrollList {
       typeof createElement !== "function"
     );
   }
+
+  setState(lastIndex) {
+    if (typeof lastIndex !== "number") {
+      throw new Error(ScrollList.messages.notNumberArg);
+    }
+  }
 }
 
 ScrollList.messages = {
   invalidArgs: "잘못된 인자로 ScrollList 인스턴스를 생성했습니다.",
+  notNumberArg: "인자 타입이 숫자가 아닙니다.",
 };
