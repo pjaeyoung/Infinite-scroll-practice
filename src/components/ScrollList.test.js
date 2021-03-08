@@ -44,9 +44,10 @@ describe("ScrollList", () => {
       });
     });
 
-    it("각 인자는 인스턴스의 속성으로 지정되어야 합니다.", () => {
+    it("필요한 모든 인스턴스의 속성이 지정되어야 합니다.", () => {
+      const allProps = ["currentLastIndex", ...Object.keys(goodArg)];
       const scrollList = new ScrollList(goodArg);
-      Object.keys(goodArg).forEach((prop) => {
+      allProps.forEach((prop) => {
         expect(scrollList.hasOwnProperty(prop)).toBe(true);
       });
     });
