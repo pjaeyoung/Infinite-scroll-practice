@@ -3,6 +3,11 @@ export default class ScrollList {
     if (this.isInValidArgs({ $target, items, renderPerItem, createElement })) {
       throw new Error(ScrollList.messages.invalidArgs);
     }
+
+    this.$target = $target;
+    this.items = items;
+    this.renderPerItem = renderPerItem;
+    this.createElement = createElement;
   }
 
   isInValidArgs({ $target, items, renderPerItem, createElement }) {
