@@ -16,6 +16,8 @@ export default class ScrollList {
     this.renderPerItem = renderPerItem;
     this.createElement = createElement;
     this.currentLastIndex = -1;
+
+    this.render();
   }
 
   isInvalidConstructorArgs({ $target, items, renderPerItem, createElement }) {
@@ -46,7 +48,7 @@ export default class ScrollList {
         this.currentLastIndex + 1 + this.renderPerItem
       )
       .forEach((anItem) => {
-        this.createElement(anItem);
+        this.$target.appendChild(this.createElement(anItem));
       });
   }
 }
