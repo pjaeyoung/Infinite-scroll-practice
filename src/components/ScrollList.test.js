@@ -58,7 +58,9 @@ describe("ScrollList", () => {
       $target: document.createElement("ul"),
       items: ["item1", "item2"],
       renderPerItem: 5,
-      createElement: function () {},
+      createElement: function (item) {
+        return document.createElement("li");
+      },
     };
 
     let scrollList;
@@ -96,20 +98,34 @@ describe("ScrollList", () => {
     });
 
     describe("render()", () => {
-      it("items개수가 renderPerItem보다 크거나 같은 경우 , createElement가 renderPerItem 횟수 만큼 호출되어야 합니다.", () => {
+      beforeEach(() => {
+        jest.spyOn(scrollList.$target, "appendChild");
+      });
+
+      afterEach(() => {
+        scrollList.$target.appendChild.mockRestore();
+      });
+
+      it("items개수가 renderPerItem보다 크거나 같은 경우 , createElement 와 $target의 appendChild 함수가 renderPerItem 횟수 만큼 호출되어야 합니다.", () => {
         scrollList.items = ["1", "2", "3", "4", "5", "6"];
         jest.spyOn(scrollList, "createElement");
         scrollList.render();
         expect(scrollList.createElement).toHaveBeenCalledTimes(
           scrollList.renderPerItem
         );
+        expect(scrollList.$target.appendChild).toHaveBeenCalledTimes(
+          scrollList.renderPerItem
+        );
       });
 
-      it("items개수가 renderPerItem보다 작은 경우 , createElement가 item 갯수 만큼 호출되어야 합니다.", () => {
+      it("items개수가 renderPerItem보다 작은 경우 , createElement와 $target의 appendChild 함수가 item 갯수 만큼 호출되어야 합니다.", () => {
         scrollList.items = ["1"];
         jest.spyOn(scrollList, "createElement");
         scrollList.render();
         expect(scrollList.createElement).toHaveBeenCalledTimes(
+          scrollList.items.length
+        );
+        expect(scrollList.$target.appendChild).toHaveBeenCalledTimes(
           scrollList.items.length
         );
       });
