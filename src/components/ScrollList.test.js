@@ -81,6 +81,12 @@ describe("ScrollList", () => {
         scrollList.setState(expectedIndex);
         expect(scrollList.currentLastIndex).toBe(expectedIndex);
       });
+
+      it("render 함수가 호출되어야 합니다.", () => {
+        jest.spyOn(scrollList, "render");
+        scrollList.setState(2);
+        expect(scrollList.render).toHaveBeenCalled();
+      });
     });
   });
 });
