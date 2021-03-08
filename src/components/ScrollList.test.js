@@ -88,5 +88,25 @@ describe("ScrollList", () => {
         expect(scrollList.render).toHaveBeenCalled();
       });
     });
+
+    describe("render()", () => {
+      it("items개수가 renderPerItem보다 크거나 같은 경우 , createElement가 renderPerItem 횟수 만큼 호출되어야 합니다.", () => {
+        scrollList.items = ["1", "2", "3", "4", "5", "6"];
+        jest.spyOn(scrollList, "createElement");
+        scrollList.render();
+        expect(scrollList.createElement).toHaveBeenCalledTimes(
+          scrollList.renderPerItem
+        );
+      });
+
+      it("items개수가 renderPerItem보다 작은 경우 , createElement가 item 갯수 만큼 호출되어야 합니다.", () => {
+        scrollList.items = ["1"];
+        jest.spyOn(scrollList, "createElement");
+        scrollList.render();
+        expect(scrollList.createElement).toHaveBeenCalledTimes(
+          scrollList.items.length
+        );
+      });
+    });
   });
 });
