@@ -8,6 +8,7 @@ export default class ScrollList {
     this.items = items;
     this.renderPerItem = renderPerItem;
     this.createElement = createElement;
+    this.currentLastIndex = -1;
   }
 
   isInValidArgs({ $target, items, renderPerItem, createElement }) {
