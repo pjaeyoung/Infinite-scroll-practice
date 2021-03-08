@@ -40,7 +40,7 @@ describe("ScrollList", () => {
       badArgs.forEach((arg) => {
         expect(function shouldThrow() {
           new ScrollList(arg);
-        }).toThrowError(ScrollList.messages.invalidArgs);
+        }).toThrowError(ScrollList.messages.invalidConstructorArgs);
       });
     });
 
