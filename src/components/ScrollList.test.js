@@ -75,6 +75,12 @@ describe("ScrollList", () => {
           }).toThrowError(ScrollList.messages.notNumberArg);
         });
       });
+
+      it("인스턴스 속성 lastIndex값이 인자값으로 대체되어야 합니다.", () => {
+        const expectedIndex = 2;
+        scrollList.setState(expectedIndex);
+        expect(scrollList.currentLastIndex).toBe(expectedIndex);
+      });
     });
   });
 });
