@@ -130,5 +130,16 @@ describe("ScrollList", () => {
         );
       });
     });
+
+    describe("isAllItemsRendered()", () => {
+      it("모든 items들이 렌더링되지 않으면 false값을 반환해야 합니다.", () => {
+        scrollList.setState(0);
+        expect(scrollList.isAllItemsRendered()).toBe(false);
+      });
+      it("모든 items들이 렌더링되면 true값을 반환해야 합니다.", () => {
+        scrollList.setState(1);
+        expect(scrollList.isAllItemsRendered()).toBe(true);
+      });
+    });
   });
 });
