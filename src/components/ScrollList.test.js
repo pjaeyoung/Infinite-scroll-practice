@@ -52,4 +52,29 @@ describe("ScrollList", () => {
       });
     });
   });
+
+  describe("methods", () => {
+    const arg = {
+      $target: document.createElement("ul"),
+      items: [],
+      renderPerItem: 5,
+      createElement: function () {},
+    };
+
+    let scrollList;
+
+    beforeEach(() => {
+      scrollList = new ScrollList(arg);
+    });
+    describe("setState(lastIndex)", () => {
+      it("lastIndex의 타입이 숫자가 아니면 에러를 던집니다.", () => {
+        const notNumber = ["", null, undefined, {}, function () {}, []];
+        notNumber.forEach((arg) => {
+          expect(function shouldThrow() {
+            scrollList.setState();
+          }).toThrowError(ScrollList.messages.notNumberArg);
+        });
+      });
+    });
+  });
 });
