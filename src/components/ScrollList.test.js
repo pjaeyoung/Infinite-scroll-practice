@@ -53,93 +53,112 @@ describe("ScrollList", () => {
     });
   });
 
-  describe("methods", () => {
+  describe("render()", () => {
+    let arg;
+
+    function createItems(count) {
+      return new Array(count).fill().map((_, i) => `item${i}`);
+    }
+
+    beforeEach(() => {
+      arg = {
+        $target: document.createElement("ul"),
+        renderPerItem: 5,
+        createElement: function (item) {
+          const $li = document.createElement("li");
+          $li.textContent = item;
+          return $li;
+        },
+      };
+    });
+
+    it("currentLastIndex가 렌더링한 아이템의 마지막 인덱스 값으로 갱신되어야 합니다.", () => {
+      arg.items = createItems(2);
+      const scrollList = new ScrollList(arg);
+      expect(scrollList.currentLastIndex).toBe(1);
+    });
+
+    it("items개수가 renderPerItem보다 작은 경우 , createElement와 $target의 appendChild 함수가 남은 item 갯수 만큼 호출되어야 합니다.", () => {
+      arg.items = createItems(4);
+
+      const scrollList = new ScrollList(arg);
+      jest.spyOn(scrollList, "createElement");
+      jest.spyOn(scrollList.$target, "appendChild");
+
+      scrollList.render();
+
+      const itemsRemainingCount =
+        scrollList.items.length - scrollList.currentLastIndex - 1;
+
+      expect(scrollList.createElement).toHaveBeenCalledTimes(
+        itemsRemainingCount
+      );
+      expect(scrollList.$target.appendChild).toHaveBeenCalledTimes(
+        itemsRemainingCount
+      );
+    });
+
+    it("items개수가 renderPerItem보다 크거나 같은 경우 , createElement 와 $target의 appendChild 함수가 renderPerItem 횟수 만큼 호출되어야 합니다.", () => {
+      arg.items = createItems(20);
+
+      const scrollList = new ScrollList(arg);
+      jest.spyOn(scrollList, "createElement");
+      jest.spyOn(scrollList.$target, "appendChild");
+
+      scrollList.render();
+
+      expect(scrollList.createElement).toHaveBeenCalledTimes(
+        scrollList.renderPerItem
+      );
+      expect(scrollList.$target.appendChild).toHaveBeenCalledTimes(
+        scrollList.renderPerItem
+      );
+    });
+  });
+
+  describe("getLastRenderedItem()", () => {
     const arg = {
       $target: document.createElement("ul"),
       items: ["item1", "item2"],
       renderPerItem: 5,
       createElement: function (item) {
-        return document.createElement("li");
+        const $li = document.createElement("li");
+        $li.textContent = item;
+        return $li;
       },
     };
 
-    let scrollList;
+    const scrollList = new ScrollList(arg);
 
-    beforeEach(() => {
-      scrollList = new ScrollList(arg);
-    });
-    describe("setState(lastIndex)", () => {
-      it("lastIndex의 타입이 숫자가 아니면 에러를 던집니다.", () => {
-        const notNumber = ["", null, undefined, {}, function () {}, []];
-        notNumber.forEach((arg) => {
-          expect(function shouldThrow() {
-            scrollList.setState();
-          }).toThrowError(ScrollList.messages.notNumberArg);
-        });
-      });
-
-      it("lastIndex + 1 이 items 개수보다 크면 에러를 던집니다.", () => {
-        expect(function shouldThrow() {
-          scrollList.setState(3);
-        }).toThrowError(ScrollList.messages.lastIndexOverItemsCount);
-      });
-
-      it("인스턴스 속성 lastIndex값이 인자값으로 대체되어야 합니다.", () => {
-        const expectedIndex = 1;
-        scrollList.setState(expectedIndex);
-        expect(scrollList.currentLastIndex).toBe(expectedIndex);
-      });
-
-      it("render 함수가 호출되어야 합니다.", () => {
-        jest.spyOn(scrollList, "render");
-        scrollList.setState(1);
-        expect(scrollList.render).toHaveBeenCalled();
-      });
+    it("반환값이 HTMLElement의 인스턴스여야 합니다.", () => {
+      expect(scrollList.getLastRenderedItem()).toBeInstanceOf(HTMLElement);
     });
 
-    describe("render()", () => {
-      beforeEach(() => {
-        jest.spyOn(scrollList.$target, "appendChild");
-      });
-
-      afterEach(() => {
-        scrollList.$target.appendChild.mockRestore();
-      });
-
-      it("items개수가 renderPerItem보다 크거나 같은 경우 , createElement 와 $target의 appendChild 함수가 renderPerItem 횟수 만큼 호출되어야 합니다.", () => {
-        scrollList.items = ["1", "2", "3", "4", "5", "6"];
-        jest.spyOn(scrollList, "createElement");
-        scrollList.render();
-        expect(scrollList.createElement).toHaveBeenCalledTimes(
-          scrollList.renderPerItem
-        );
-        expect(scrollList.$target.appendChild).toHaveBeenCalledTimes(
-          scrollList.renderPerItem
-        );
-      });
-
-      it("items개수가 renderPerItem보다 작은 경우 , createElement와 $target의 appendChild 함수가 item 갯수 만큼 호출되어야 합니다.", () => {
-        scrollList.items = ["1"];
-        jest.spyOn(scrollList, "createElement");
-        scrollList.render();
-        expect(scrollList.createElement).toHaveBeenCalledTimes(
-          scrollList.items.length
-        );
-        expect(scrollList.$target.appendChild).toHaveBeenCalledTimes(
-          scrollList.items.length
-        );
-      });
+    it("렌더링된 아이템들 중 마지막 아이템을 반환해야 합니다.", () => {
+      expect(scrollList.getLastRenderedItem().textContent).toBe("item2");
     });
+  });
 
-    describe("isAllItemsRendered()", () => {
-      it("모든 items들이 렌더링되지 않으면 false값을 반환해야 합니다.", () => {
-        scrollList.setState(0);
-        expect(scrollList.isAllItemsRendered()).toBe(false);
-      });
-      it("모든 items들이 렌더링되면 true값을 반환해야 합니다.", () => {
-        scrollList.setState(1);
-        expect(scrollList.isAllItemsRendered()).toBe(true);
-      });
+  describe("isAllItemsRendered()", () => {
+    const arg = {
+      $target: document.createElement("ul"),
+      items: ["item1", "item2"],
+      renderPerItem: 5,
+      createElement: function (item) {
+        const $li = document.createElement("li");
+        $li.textContent = item;
+        return $li;
+      },
+    };
+    it("모든 items들이 렌더링되지 않으면 false값을 반환해야 합니다.", () => {
+      arg.renderPerItem = 1;
+      const scrollList = new ScrollList(arg);
+      expect(scrollList.isAllItemsRendered()).toBe(false);
+    });
+    it("모든 items들이 렌더링되면 true값을 반환해야 합니다.", () => {
+      arg.renderPerItem = 2;
+      const scrollList = new ScrollList(arg);
+      expect(scrollList.isAllItemsRendered()).toBe(true);
     });
   });
 });
