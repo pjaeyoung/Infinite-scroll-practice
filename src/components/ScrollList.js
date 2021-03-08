@@ -31,6 +31,10 @@ export default class ScrollList {
     if (typeof lastIndex !== "number") {
       throw new Error(ScrollList.messages.notNumberArg);
     }
+
+    if (lastIndex + 1 > this.items.length) {
+      throw new Error(ScrollList.messages.lastIndexOverItemsCount);
+    }
     this.currentLastIndex = lastIndex;
     this.render();
   }
@@ -50,4 +54,5 @@ export default class ScrollList {
 ScrollList.messages = {
   invalidConstructorArgs: "잘못된 인자로 ScrollList 인스턴스를 생성했습니다.",
   notNumberArg: "인자 타입이 숫자가 아닙니다.",
+  lastIndexOverItemsCount: "lastIndex 값이 items 개수보다 큽니다.",
 };
