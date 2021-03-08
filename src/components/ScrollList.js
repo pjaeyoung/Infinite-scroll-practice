@@ -32,7 +32,10 @@ export default class ScrollList {
       throw new Error(ScrollList.messages.notNumberArg);
     }
     this.currentLastIndex = lastIndex;
+    this.render();
   }
+
+  render() {}
 }
 
 ScrollList.messages = {
