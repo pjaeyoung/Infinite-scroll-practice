@@ -33,27 +33,18 @@ export default class ScrollList {
     return this.currentLastIndex + 1 === this.items.length;
   }
 
-  setState(lastIndex) {
-    if (typeof lastIndex !== "number") {
-      throw new Error(ScrollList.messages.notNumberArg);
-    }
-
-    if (lastIndex + 1 > this.items.length) {
-      throw new Error(ScrollList.messages.lastIndexOverItemsCount);
-    }
-    this.currentLastIndex = lastIndex;
-    this.render();
+  getLastRenderedItem() {
+    return this.$target.children[this.currentLastIndex];
   }
 
   render() {
-    this.items
-      .slice(
-        this.currentLastIndex + 1,
-        this.currentLastIndex + 1 + this.renderPerItem
-      )
-      .forEach((anItem) => {
-        this.$target.appendChild(this.createElement(anItem));
-      });
+    const startIndex = this.currentLastIndex + 1;
+    const endIndex = startIndex + this.renderPerItem;
+
+    this.items.slice(startIndex, endIndex).forEach((anItem) => {
+      this.$target.appendChild(this.createElement(anItem));
+      this.currentLastIndex++;
+    });
   }
 }
 
