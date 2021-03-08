@@ -35,7 +35,16 @@ export default class ScrollList {
     this.render();
   }
 
-  render() {}
+  render() {
+    this.items
+      .slice(
+        this.currentLastIndex + 1,
+        this.currentLastIndex + 1 + this.renderPerItem
+      )
+      .forEach((anItem) => {
+        this.createElement(anItem);
+      });
+  }
 }
 
 ScrollList.messages = {
