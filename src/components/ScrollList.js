@@ -29,6 +29,10 @@ export default class ScrollList {
     );
   }
 
+  isAllItemsRendered() {
+    return this.currentLastIndex + 1 === this.items.length;
+  }
+
   setState(lastIndex) {
     if (typeof lastIndex !== "number") {
       throw new Error(ScrollList.messages.notNumberArg);
