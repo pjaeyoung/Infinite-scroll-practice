@@ -1,7 +1,14 @@
 export default class ScrollList {
   constructor({ $target, items, renderPerItem, createElement }) {
-    if (this.isInValidArgs({ $target, items, renderPerItem, createElement })) {
-      throw new Error(ScrollList.messages.invalidArgs);
+    if (
+      this.isInvalidConstructorArgs({
+        $target,
+        items,
+        renderPerItem,
+        createElement,
+      })
+    ) {
+      throw new Error(ScrollList.messages.invalidConstructorArgs);
     }
 
     this.$target = $target;
@@ -11,7 +18,7 @@ export default class ScrollList {
     this.currentLastIndex = -1;
   }
 
-  isInValidArgs({ $target, items, renderPerItem, createElement }) {
+  isInvalidConstructorArgs({ $target, items, renderPerItem, createElement }) {
     return (
       !($target instanceof HTMLElement) ||
       !Array.isArray(items) ||
@@ -28,6 +35,6 @@ export default class ScrollList {
 }
 
 ScrollList.messages = {
-  invalidArgs: "잘못된 인자로 ScrollList 인스턴스를 생성했습니다.",
+  invalidConstructorArgs: "잘못된 인자로 ScrollList 인스턴스를 생성했습니다.",
   notNumberArg: "인자 타입이 숫자가 아닙니다.",
 };
