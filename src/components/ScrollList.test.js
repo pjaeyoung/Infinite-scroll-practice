@@ -56,7 +56,7 @@ describe("ScrollList", () => {
   describe("methods", () => {
     const arg = {
       $target: document.createElement("ul"),
-      items: [],
+      items: ["item1", "item2"],
       renderPerItem: 5,
       createElement: function () {},
     };
@@ -76,15 +76,21 @@ describe("ScrollList", () => {
         });
       });
 
+      it("lastIndex + 1 이 items 개수보다 크면 에러를 던집니다.", () => {
+        expect(function shouldThrow() {
+          scrollList.setState(3);
+        }).toThrowError(ScrollList.messages.lastIndexOverItemsCount);
+      });
+
       it("인스턴스 속성 lastIndex값이 인자값으로 대체되어야 합니다.", () => {
-        const expectedIndex = 2;
+        const expectedIndex = 1;
         scrollList.setState(expectedIndex);
         expect(scrollList.currentLastIndex).toBe(expectedIndex);
       });
 
       it("render 함수가 호출되어야 합니다.", () => {
         jest.spyOn(scrollList, "render");
-        scrollList.setState(2);
+        scrollList.setState(1);
         expect(scrollList.render).toHaveBeenCalled();
       });
     });
