@@ -43,5 +43,12 @@ describe("ScrollList", () => {
         }).toThrowError(ScrollList.messages.invalidArgs);
       });
     });
+
+    it("각 인자는 인스턴스의 속성으로 지정되어야 합니다.", () => {
+      const scrollList = new ScrollList(goodArg);
+      Object.keys(goodArg).forEach((prop) => {
+        expect(scrollList.hasOwnProperty(prop)).toBe(true);
+      });
+    });
   });
 });
