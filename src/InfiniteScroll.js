@@ -1,4 +1,4 @@
-import ScrollList from "./components/ScrollList";
+import ScrollList from "./components/ScrollList.js";
 
 export default class InfiniteScroll {
   constructor({ scrollList, options }) {
@@ -15,8 +15,7 @@ export default class InfiniteScroll {
   }
 
   _callback(entries, observer) {
-    if (!entries[0].isIntersectioning) return;
-
+    if (!entries[0].isIntersecting) return;
     observer.unobserve(entries[0].target);
     if (this.scrollList.isAllItemsRendered()) {
       observer.disconnect();
