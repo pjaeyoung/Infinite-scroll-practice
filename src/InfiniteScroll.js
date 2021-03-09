@@ -8,6 +8,8 @@ export default class InfiniteScroll {
     ) {
       throw new Error(InfiniteScroll.messages.invalidConstructorArg);
     }
+
+    this.scrollList = scrollList;
   }
 }
 
