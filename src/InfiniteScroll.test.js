@@ -2,13 +2,25 @@ import ScrollList from "./components/ScrollList";
 import InfiniteScroll from "./InfiniteScroll";
 
 describe("InfiniteScroll", () => {
+  const goodArgs = {
+    scrollList: new ScrollList({
+      $target: document.createElement("ul"),
+      renderPerItem: 5,
+      items: new Array(25).fill().map((_, i) => `item${i + 1}`),
+      createElement: function (item) {
+        const $li = document.createElement("li");
+        $li.textContent = item;
+        return $li;
+      },
+    }),
+    options: {},
+  };
+
   beforeEach(() => {
     window.IntersectionObserver = jest.fn(function (callback, options) {
-      ({
-        observe: function () {},
-        unobserve: function () {},
-        disconnect: function () {},
-      });
+      this.observe = function () {};
+      this.unobserve = function () {};
+      this.disconnect = function () {};
     });
   });
 
@@ -16,15 +28,6 @@ describe("InfiniteScroll", () => {
     window.IntersectionObserver.mockRestore();
   });
   describe("constructor({scrollList,options})", () => {
-    const goodArgs = {
-      scrollList: new ScrollList({
-        $target: document.createElement("ul"),
-        renderPerItem: 5,
-        items: [],
-        createElement: function () {},
-      }),
-      options: {},
-    };
     it("잘못된 인자로 넘기면 에러를 던져야 합니다.", () => {
       const badArgs = [
         {},
