@@ -10,6 +10,7 @@ export default class InfiniteScroll {
     }
 
     this.scrollList = scrollList;
+    this.io = new IntersectionObserver(() => {}, options);
   }
 }
 
