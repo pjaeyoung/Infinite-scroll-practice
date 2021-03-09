@@ -10,7 +10,20 @@ export default class InfiniteScroll {
     }
 
     this.scrollList = scrollList;
-    this.io = new IntersectionObserver(() => {}, options);
+    this.io = new IntersectionObserver(this._callback.bind(this), options);
+    this.io.observe(this.scrollList.getLastRenderedItem());
+  }
+
+  _callback(entries, observer) {
+    if (!entries[0].isIntersectioning) return;
+
+    observer.unobserve(entries[0].target);
+    if (this.scrollList.isAllItemsRendered()) {
+      observer.disconnect();
+    } else {
+      this.scrollList.render();
+      observer.observe(this.scrollList.getLastRenderedItem());
+    }
   }
 }
 
