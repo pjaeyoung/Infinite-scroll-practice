@@ -1,5 +1,4 @@
 import ScrollList from "./components/ScrollList.js";
-import InfiniteScroll from "./InfiniteScroll.js";
 
 const items = new Array(21).fill().map((_, i) => `item ${i + 1}`);
 const PER_ITEMS = 5;
