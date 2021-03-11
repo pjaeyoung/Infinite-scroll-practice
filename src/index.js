@@ -11,12 +11,32 @@ function createElement(item) {
   return $li;
 }
 
-new InfiniteScroll({
-  options: { thresold: 0.5 },
-  scrollList: new ScrollList({
+function createObserverCallback(scrollList) {
+  return (entries, observer) => {
+    if (!entries[0].isIntersecting) return;
+    observer.unobserve(entries[0].target);
+    if (scrollList.isAllItemsRendered()) {
+      observer.disconnect();
+    } else {
+      scrollList.render();
+      observer.observe(scrollList.getLastRenderedItem());
+    }
+  };
+}
+
+function init() {
+  const scrollList = new ScrollList({
     $target: document.querySelector("#scroll-list"),
     items,
     renderPerItem: PER_ITEMS,
     createElement,
-  }),
-});
+  });
+
+  const io = new IntersectionObserver(createObserverCallback(scrollList), {
+    threshold: 0.8,
+  });
+
+  io.observe(scrollList.getLastRenderedItem());
+}
+
+init();
